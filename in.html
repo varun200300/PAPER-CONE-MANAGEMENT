@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Professional font stack */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('v.jpg ');
+      background-size: cover;
+      background-position: center;
+    }
+    .container {
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 20px 40px; 
+      margin: 10px;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: 2px solid #4CAF50;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+    }
+    .btn:hover {
+      background-color: white;
+      color: #4CAF50;
+      animation: none; 
+    }
+    @keyframes blink-animation {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.5;
+      }
+    }
+    @media only screen and (max-width: 600px) {
+      .btn {
+        padding: 16px 32px;
+        font-size: 14px;
+      }
+    }
+    h1 {
+      color: white; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      font-size: 36px; /* Increase font size for a prominent heading */
+      font-weight: bold; /* Make the text bold */
+     /* Convert text to uppercase for emphasis */
+      letter-spacing: 2px; /* Add spacing between letters for better readability */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> Welcome to Vinayaga Cones!</h1>
+    <a href="login.html" class="btn">Admin Login</a>
+    <a href="http://localhost/vinayaga%20cones/f5craft_Attendance-and-Payroll-System-PHP/index.php" class="btn">Employee Login</a>
+  </div>
+</body>
+</html>
+  

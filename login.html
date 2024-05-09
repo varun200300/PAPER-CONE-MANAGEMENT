@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Add CSS for responsiveness */
+        @media only screen and (max-width: 600px) {
+            .login-container {
+                width: 90%;
+                margin: auto;
+            }
+            .logo {
+                text-align: center;
+            }
+            .logo img {
+                max-width: 80%;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            input[type="text"],
+            input[type="password"] {
+                width: 100%;
+                padding: 10px;
+            }
+            button {
+                width: 100%;
+            }
+            .forgot-password {
+                text-align: right;
+                margin-top: 10px;
+            }
+            .forgot-password a {
+                font-size: 14px;
+                color: #888;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="i3.jpg" alt="Company Logo">
+        </div>
+        <h2>Admin Login</h2>
+        <form>
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <a href="admin.html"><button type="button">Login</button></a>
+        </form>
+    </div>
+</body>
+</html>

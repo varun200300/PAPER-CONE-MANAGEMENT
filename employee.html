@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px; /* Increased max-width */
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px; /* Adjusted padding */
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px; /* Adjusted font size */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .editEmployeeBtn, .saveEmployeeBtn, .removeEmployeeBtn {
+            margin-right: 5px;
+        }
+
+        .saveEmployeeBtn {
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Details</h1>
+        
+        <div class="form-container">
+            <h2>Add Employee</h2>
+            <form id="addEmployeeForm">
+                <div class="form-group">
+                    <label for="employeeName">Employee Name</label>
+                    <input type="text" id="employeeName" placeholder="Enter employee name" required>
+                    <span id="nameError" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="employeeID">Employee ID</label>
+                    <input type="text" id="employeeID" placeholder="Auto-generated" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <select id="designation" required>
+                        <option value="">Select Designation</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Fitter">Fitter</option>
+                        <option value="Worker">Worker</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter email" required>
+                    <span id="emailError" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
+                    <span id="phoneError" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="aadharProof">Aadhar Proof</label>
+                    <input type="file" id="aadharProof" accept="image/*" required>
+                </div>
+                <button type="submit">Add Employee</button>
+            </form>
+        </div>
+
+        <div id="employeeDetails">
+            <h2>Employee Information</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Employee ID</th>
+                        <th>Designation</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Aadhar Proof</th> <!-- New column for Aadhar Proof -->
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var salaryMap = {
+                "Manager": "Rs.50,000",
+                "Fitter": "Rs.12,000",
+                "Worker": "Rs.10,000"
+            };
+
+            // Function to generate PDF from table data
+            function generatePDF() {
+                const doc = new jsPDF();
+                doc.autoTable({ html: '#employeeDetails table' });
+                doc.save('employee_information.pdf');
+            }
+
+            // Function to load employee data from local storage
+            function loadEmployeeData() {
+                var employeeData = JSON.parse(localStorage.getItem('employeeData'));
+                if (employeeData) {
+                    $.each(employeeData, function(index, employee) {
+                        $("#employeeDetails tbody").append(
+                            "<tr>" +
+                            "<td contenteditable='false'>" + employee.name + "</td>" +
+                            "<td contenteditable='false'>" + employee.id + "</td>" +
+                            "<td contenteditable='false'>" + employee.designation + "</td>" +
+                            "<td contenteditable='false'>" + employee.email + "</td>" +
+                            "<td contenteditable='false'>" + employee.phone + "</td>" +
+                            "<td contenteditable='false'><img src='" + employee.aadharProof + "' alt='Aadhar Proof' style='max-width:100px;'></td>" +
+                            "<td contenteditable='false'>" + employee.salary + "</td>" +
+                            "<td>" +
+                            "<button class='editEmployeeBtn'>Edit</button>" +
+                            "<button class='saveEmployeeBtn'>Save</button>" +
+                            "<button class='removeEmployeeBtn'>Remove</button>" +
+                            "</td>" +
+                            "</tr>"
+                        );
+                    });
+                }
+            }
+
+            loadEmployeeData(); // Load employee data when the page is loaded
+
+            $("#addEmployeeForm").submit(function(event) {
+                event.preventDefault(); 
+                var employeeName = $("#employeeName").val();
+                var designation = $("#designation").val();
+                var email = $("#email").val();
+                var phoneNumber = $("#phoneNumber").val();
+                var aadharProof = $("#aadharProof").prop('files')[0];
+                var employeeID = "EMP" + Math.floor(Math.random() * 1000); 
+                
+                var isValid = true;
+
+                if(employeeName.trim() === "") {
+                    $("#nameError").text("Name is required");
+                    isValid = false;
+                } else {
+                    $("#nameError").text("");
+                }
+
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if(!emailPattern.test(email)) {
+                    $("#emailError").text("Enter a valid email address");
+                    isValid = false;
+                } else {
+                    $("#emailError").text("");
+                }
+
+                var phonePattern = /^\d{10}$/;
+                if(!phonePattern.test(phoneNumber)) {
+                    $("#phoneError").text("Enter a valid 10-digit phone number");
+                    isValid = false;
+                } else {
+                    $("#phoneError").text("");
+                }
+
+                $("#employeeDetails tbody tr").each(function() {
+                    var existingName = $(this).find("td:eq(0)").text();
+                    var existingEmail = $(this).find("td:eq(3)").text();
+                    var existingPhone = $(this).find("td:eq(4)").text();
+                    if(existingName === employeeName) {
+                        $("#nameError").text("Name already exists");
+                        isValid = false;
+                    }
+                    if(existingEmail === email) {
+                        $("#emailError").text("Email already exists");
+                        isValid = false;
+                    }
+                    if(existingPhone === phoneNumber) {
+                        $("#phoneError").text("Phone number already exists");
+                        isValid = false;
+                    }
+                });
+
+                if(!isValid) {
+                    return;
+                }
+
+                // Read the file content
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var aadharProofData = event.target.result; // Read the file data
+
+                    $("#employeeDetails tbody").append(
+                        "<tr>" +
+                        "<td contenteditable='false'>" + employeeName + "</td>" +
+                        "<td contenteditable='false'>" + employeeID + "</td>" +
+                        "<td contenteditable='false'>" + designation + "</td>" +
+                        "<td contenteditable='false'>" + email + "</td>" +
+                        "<td contenteditable='false'>" + phoneNumber + "</td>" +
+                        "<td contenteditable='false'><img src='" + aadharProofData + "' alt='Aadhar Proof' style='max-width:100px;'></td>" +
+                        "<td contenteditable='false'>" + salaryMap[designation] + "</td>" +
+                        "<td>" +
+                        "<button class='editEmployeeBtn'>Edit</button>" +
+                        "<button class='saveEmployeeBtn'>Save</button>" +
+                        "<button class='removeEmployeeBtn'>Remove</button>" +
+                        "</td>" +
+                        "</tr>"
+                    );
+                    var employeeData = JSON.parse(localStorage.getItem('employeeData')) || [];
+                    employeeData.push({
+                        name: employeeName,
+                        id: employeeID,
+                        designation: designation,
+                        email: email,
+                        phone: phoneNumber,
+                        salary: salaryMap[designation],
+                        aadharProof: aadharProofData 
+                    });
+                    localStorage.setItem('employeeData', JSON.stringify(employeeData));
+
+                    $("#addEmployeeForm")[0].reset();
+                };
+                reader.readAsDataURL(aadharProof); // Read the file as data URL
+            });
+
+            $("#employeeDetails").on("click", ".editEmployeeBtn", function() {
+                $(this).closest("tr").find("td").prop("contenteditable", true);
+                $(this).closest("tr").find(".saveEmployeeBtn").show();
+                $(this).closest("tr").find(".removeEmployeeBtn").hide();
+                $(this).hide();
+            });
+
+            $("#employeeDetails").on("click", ".saveEmployeeBtn", function() {
+                $(this).closest("tr").find("td").prop("contenteditable", false);
+                $(this).closest("tr").find(".editEmployeeBtn").show();
+                $(this).closest("tr").find(".removeEmployeeBtn").show();
+                $(this).hide();
+                var rowIndex = $(this).closest("tr").index();
+                var employeeData = JSON.parse(localStorage.getItem('employeeData'));
+                employeeData[rowIndex].name = $(this).closest("tr").find("td:eq(0)").text();
+                employeeData[rowIndex].designation = $(this).closest("tr").find("td:eq(2)").text();
+                employeeData[rowIndex].email = $(this).closest("tr").find("td:eq(3)").text();
+                employeeData[rowIndex].phone = $(this).closest("tr").find("td:eq(4)").text();
+                localStorage.setItem('employeeData', JSON.stringify(employeeData));
+            });
+            $("#employeeDetails").on("click", ".removeEmployeeBtn", function() {
+                $(this).closest("tr").remove();
+                var rowIndex = $(this).closest("tr").index();
+                var employeeData = JSON.parse(localStorage.getItem('employeeData'));
+                employeeData.splice(rowIndex, 1);
+                localStorage.setItem('employeeData', JSON.stringify(employeeData));
+            });
+        });
+    </script>
+</body>
+</html>
